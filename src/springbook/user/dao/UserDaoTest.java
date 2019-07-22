@@ -1,30 +1,60 @@
 package springbook.user.dao;
 
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class UserDaoTest {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+    @Test
+    public void addAndGet() throws SQLException {
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao", UserDao.class);
 
-        User user = new User();
-        user.setId("mycat");
-        user.setName("양정수");
-        user.setPassword("yang");
+        User user1 = new User("mycat", "양정수", "yang");
+        User user2 = new User("iu", "아이유", "jieun");
 
-        dao.add(user);
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
 
-        System.out.println(user.getId() + " 등록 성공");
+        dao.add(user1);
+        dao.add(user2);
+        assertThat(dao.getCount(), is(2));
 
-        User user2 = dao.get(user.getId());
-        System.out.println(user2.getName());
-        System.out.println(user2.getPassword());
+        User userGet1 = dao.get(user1.getId());
+        assertThat(userGet1.getName(), is(user1.getName()));
+        assertThat(userGet1.getPassword(), is(user1.getPassword()));
 
-        System.out.println(user2.getId() + " 조회 성공");
+        User userGet2 = dao.get(user2.getId());
+        assertThat(userGet2.getName(), is(user2.getName()));
+        assertThat(userGet2.getPassword(), is(user2.getPassword()));
+    }
+
+    @Test
+    public void count() throws SQLException {
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        UserDao dao = context.getBean("userDao", UserDao.class);
+
+        User user1 = new User("mycat", "양정수", "yang");
+        User user2 = new User("iu", "아이유", "jieun");
+        User user3 = new User("yuri", "성유리", "seong");
+
+        dao.deleteAll();
+        assertThat(dao.getCount(), is(0));
+
+        dao.add(user1);
+        assertThat(dao.getCount(), is(1));
+
+        dao.add(user2);
+        assertThat(dao.getCount(), is(2));
+
+        dao.add(user3);
+        assertThat(dao.getCount(), is(3));
     }
 }
