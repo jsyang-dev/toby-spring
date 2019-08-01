@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import springbook.user.dao.UserDao;
+import springbook.user.dao.UserDaoJdbc;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,10 +23,10 @@ public class JUnitTest {
     ApplicationContext context;
 
     @Autowired
-    UserDao dao1;
+    UserDaoJdbc dao1;
 
     @Autowired
-    UserDao dao2;
+    UserDaoJdbc dao2;
 
     static Set<JUnitTest> testObjects = new HashSet<JUnitTest>();
     static ApplicationContext contextObject = null;
@@ -60,7 +60,7 @@ public class JUnitTest {
 
     @Test
     public void singletonBean() {
-        UserDao dao3 = context.getBean("userDao", UserDao.class);
+        UserDaoJdbc dao3 = context.getBean("userDao", UserDaoJdbc.class);
 
         assertThat(dao1 == dao2 && dao2 == dao3, is(true));
     }
