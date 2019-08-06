@@ -2,7 +2,6 @@ package springbook.user.dao;
 
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 public interface UserDao {
@@ -15,4 +14,6 @@ public interface UserDao {
     Integer getCount();
 
     List<User> getAll();
+
+    void update(User user1);
 }
