@@ -143,6 +143,7 @@ public class UserDaoTest {
         dao.deleteAll();
 
         dao.add(user1);
+        dao.add(user2);
 
         user1.setName("혜리");
         user1.setPassword("hyeri");
@@ -153,5 +154,7 @@ public class UserDaoTest {
 
         User user1update = dao.get(user1.getId());
         checkSameUser(user1, user1update);
+        User user2update = dao.get(user2.getId());
+        checkSameUser(user2, user2update);
     }
 }
