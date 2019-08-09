@@ -25,7 +25,7 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
-    List<User> users;
+    private List<User> users;
 
     @Before
     public void setUp() {

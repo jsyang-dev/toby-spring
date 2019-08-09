@@ -12,7 +12,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public void upgradeLevels() {
+    void upgradeLevels() {
         List<User> users = userDao.getAll();
 
         for (User user: users) {
@@ -41,7 +41,7 @@ public class UserService {
         userDao.update(user);
     }
 
-    public void add(User user) {
+    void add(User user) {
         if (user.getLevel() == null) {
             user.setLevel(Level.BASIC);
         }
