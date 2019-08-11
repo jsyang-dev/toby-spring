@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,18 +30,18 @@ public class UserServiceTest {
     UserService userService;
 
     @Autowired
-    DataSource dataSource;
+    PlatformTransactionManager transactionManager;
 
     private List<User> users;
 
     @Before
     public void setUp() {
         users = Arrays.asList(
-                new User("aaa", "가가가", "p1", Level.BASIC, MIN_LOGIN_FOR_SILVER - 1, 0),
-                new User("bbb", "나나나", "p2", Level.BASIC, MIN_LOGIN_FOR_SILVER, 0),
-                new User("ccc", "다다다", "p3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
-                new User("ddd", "라라라", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
-                new User("eee", "마마마", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+                new User("aaa", "가가가", "p1", Level.BASIC, MIN_LOGIN_FOR_SILVER - 1, 0, "aaa@gmail.com"),
+                new User("bbb", "나나나", "p2", Level.BASIC, MIN_LOGIN_FOR_SILVER, 0, "bbb@gmail.com"),
+                new User("ccc", "다다다", "p3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1, "ccc@gmail.com"),
+                new User("ddd", "라라라", "p4", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD, "ddd@gmail.com"),
+                new User("eee", "마마마", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "eee@gmail.com")
         );
     }
 
@@ -99,7 +99,7 @@ public class UserServiceTest {
     public void upgradeAllOrNothing() throws Exception {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setDataSource(this.dataSource);
+        testUserService.setTransactionManager(transactionManager);
 
         userDao.deleteAll();
 
