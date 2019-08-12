@@ -1,4 +1,4 @@
-package springbook.user.dao;
+package springbook.user.domain;
 
 import org.junit.Before;
 import org.junit.Test;
