@@ -2,8 +2,6 @@ package springbook.user.domain;
 
 import org.junit.Before;
 import org.junit.Test;
-import springbook.user.domain.Level;
-import springbook.user.domain.User;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
