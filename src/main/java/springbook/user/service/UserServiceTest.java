@@ -63,30 +63,58 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeLevels() throws Exception {
-        userDao.deleteAll();
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
 
-        for (User user: users) {
-            userDao.add(user);
-        }
+        MockUserDao mockUserDao = new MockUserDao(this.users);
+        userServiceImpl.setUserDao(mockUserDao);
 
         MockMailSender mockMailSender = new MockMailSender();
         userServiceImpl.setMailSender(mockMailSender);
 
-        userService.upgradeLevels();
+        userServiceImpl.upgradeLevels();
 
-        checkLevelUpgraded(users.get(0), false);
-        checkLevelUpgraded(users.get(1), true);
-        checkLevelUpgraded(users.get(2), false);
-        checkLevelUpgraded(users.get(3), true);
-        checkLevelUpgraded(users.get(4), false);
+        List<User> updated = mockUserDao.getUpdated();
+        assertThat(updated.size(), is(2));
+        checkUserAndLevel(updated.get(0), "bbb", Level.SILVER);
+        checkUserAndLevel(updated.get(1), "ddd", Level.GOLD);
 
         List<String> requests = mockMailSender.getRequests();
         assertThat(requests.size(), is(2));
         assertThat(requests.get(0), is(users.get(1).getEmail()));
         assertThat(requests.get(1), is(users.get(3).getEmail()));
     }
+
+    private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
+        assertThat(updated.getId(), is(expectedId));
+        assertThat(updated.getLevel(), is(expectedLevel));
+    }
+
+//    @Test
+//    @DirtiesContext
+//    public void upgradeLevels() throws Exception {
+//        userDao.deleteAll();
+//
+//        for (User user: users) {
+//            userDao.add(user);
+//        }
+//
+//        MockMailSender mockMailSender = new MockMailSender();
+//        userServiceImpl.setMailSender(mockMailSender);
+//
+//        userService.upgradeLevels();
+//
+//        checkLevelUpgraded(users.get(0), false);
+//        checkLevelUpgraded(users.get(1), true);
+//        checkLevelUpgraded(users.get(2), false);
+//        checkLevelUpgraded(users.get(3), true);
+//        checkLevelUpgraded(users.get(4), false);
+//
+//        List<String> requests = mockMailSender.getRequests();
+//        assertThat(requests.size(), is(2));
+//        assertThat(requests.get(0), is(users.get(1).getEmail()));
+//        assertThat(requests.get(1), is(users.get(3).getEmail()));
+//    }
 
     private void checkLevelUpgraded(User user, boolean updated) {
         User userUpdate = userDao.get(user.getId());
@@ -174,6 +202,43 @@ public class UserServiceTest {
 
         public void send(SimpleMailMessage... simpleMailMessages) throws MailException {
 
+        }
+    }
+
+    static class MockUserDao implements UserDao {
+        private List<User> users;
+        private List<User> updated = new ArrayList<User>();
+
+        private MockUserDao(List<User> users) {
+            this.users = users;
+        }
+
+        public List<User> getUpdated() {
+            return this.updated;
+        }
+
+        public List<User> getAll() {
+            return users;
+        }
+
+        public void update(User user) {
+            updated.add(user);
+        }
+
+        public void add(User user) {
+            throw new UnsupportedOperationException();
+        }
+
+        public User get(String id) {
+            throw new UnsupportedOperationException();
+        }
+
+        public void deleteAll() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Integer getCount() {
+            throw new UnsupportedOperationException();
         }
     }
 }

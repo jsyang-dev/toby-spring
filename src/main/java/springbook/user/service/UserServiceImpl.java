@@ -30,10 +30,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public void upgradeLevels() {
-        upgradeLevelsInternal();
-    }
-
-    private void upgradeLevelsInternal() {
         List<User> users = userDao.getAll();
         for (User user : users) {
             if (canUpgradeLevel(user)) {
