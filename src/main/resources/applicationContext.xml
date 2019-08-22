@@ -46,7 +46,7 @@
 <!--    </bean>-->
 
     <aop:config>
-        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))" />
+        <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
     </aop:config>
 
     <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
