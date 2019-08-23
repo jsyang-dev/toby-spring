@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -144,14 +145,14 @@ public class UserServiceTest {
     public void upgradeAllOrNothing() throws Exception {
         userDao.deleteAll();
 
-        for (User user: users) {
+        for (User user : users) {
             userDao.add(user);
         }
 
         try {
             this.testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
-        } catch(TestUserServiceException e) {
+        } catch (TestUserServiceException e) {
         }
 
         checkLevelUpgraded(users.get(1), false);
@@ -172,9 +173,15 @@ public class UserServiceTest {
 
     }
 
-    static class TestUserServiceImpl extends UserServiceImpl {
+    @Test(expected = TransientDataAccessResourceException.class)
+    public void readOnlyTransactionAttribute() {
+        testUserService.getAll();
+    }
+
+    static class TestUserService extends UserServiceImpl {
         private String id = "ddd";
 
+        @Override
         public void upgradeUser(User user) {
             if (user.getId().equals(this.id)) {
                 throw new TestUserServiceException();
@@ -182,6 +189,13 @@ public class UserServiceTest {
             super.upgradeUser(user);
         }
 
+        @Override
+        public List<User> getAll() {
+            for (User user : super.getAll()) {
+                super.update(user);
+            }
+            return null;
+        }
     }
 
     private static class TestUserServiceException extends RuntimeException {
