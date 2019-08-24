@@ -10,9 +10,11 @@ import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
@@ -176,6 +178,26 @@ public class UserServiceTest {
     @Test(expected = TransientDataAccessResourceException.class)
     public void readOnlyTransactionAttribute() {
         testUserService.getAll();
+    }
+
+    @Test
+    @Transactional  // 테스트에 부여된 @Transactional은 기본설정에 의해 테스트 종료 후 롤백한다
+    @Rollback(true)
+    public void transactionSync() {
+//        userService.deleteAll();
+//        assertThat(userDao.getCount(), is(0));
+//        DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
+//        TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+
+        userService.deleteAll();
+
+        userService.add(users.get(0));
+        userService.add(users.get(1));
+        assertThat(userDao.getCount(), is(2));
+
+//        transactionManager.rollback(txStatus);
+//
+//        assertThat(userDao.getCount(), is(0));
     }
 
     static class TestUserService extends UserServiceImpl {
