@@ -1,28 +1,37 @@
-package springbook.learningtest.jdk.jaxb;
+package springbook.learningtest.spring.oxm;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class JaxbTest {
-    @Test
-    public void readSql() throws JAXBException, IOException {
-        String contextPath = Sqlmap.class.getPackage().getName();
-        JAXBContext context = JAXBContext.newInstance(contextPath);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = "/OxmTest-context.xml")
+public class OxmTest {
+    @Autowired
+    Unmarshaller unmarshaller;
 
-        Sqlmap sqlmap = (Sqlmap) unmarshaller.unmarshal(
+    @Test
+    public void unmarshallSqlMap() throws XmlMappingException, IOException {
+        Source xmlSource = new StreamSource(
                 getClass().getResourceAsStream("/sqlmap-test.xml")
         );
+
+        Sqlmap sqlmap = (Sqlmap) this.unmarshaller.unmarshal(xmlSource);
         List<SqlType> sqlList = sqlmap.getSql();
 
         assertThat(sqlList.size(), is(3));
