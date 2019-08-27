@@ -19,6 +19,7 @@
     <orderEntry type="library" name="mysql-connector-java-5.1.47-bin" level="project" />
     <orderEntry type="library" name="Spring-4.3.18.RELEASE" level="project" />
     <orderEntry type="library" name="com.springsource.org.junit-4.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.1.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.16" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.1.8.RELEASE" level="project" />
