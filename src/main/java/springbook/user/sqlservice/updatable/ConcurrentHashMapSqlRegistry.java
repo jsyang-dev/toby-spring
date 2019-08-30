@@ -1,4 +1,8 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.updatable;
+
+import springbook.user.sqlservice.SqlNotFoundException;
+import springbook.user.sqlservice.SqlUpdateFailureException;
+import springbook.user.sqlservice.UpdatableSqlRegistry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

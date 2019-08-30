@@ -1,7 +1,10 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.updatable;
 
 import org.junit.Before;
 import org.junit.Test;
+import springbook.user.sqlservice.SqlNotFoundException;
+import springbook.user.sqlservice.SqlUpdateFailureException;
+import springbook.user.sqlservice.UpdatableSqlRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +12,14 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ConcurrentHashMapSqlRegistryTest {
+public abstract class AbstractUpdatableSqlRegistryTest {
     UpdatableSqlRegistry sqlRegistry;
 
+    abstract protected UpdatableSqlRegistry createUpdatableSqlRegistry();
+
     @Before
-    public void SetUp() {
-        sqlRegistry = new ConcurrentHashMapSqlRegistry();
+    public void setUp() {
+        sqlRegistry = createUpdatableSqlRegistry();
         sqlRegistry.registerSql("KEY1", "SQL1");
         sqlRegistry.registerSql("KEY2", "SQL2");
         sqlRegistry.registerSql("KEY3", "SQL3");
@@ -25,7 +30,7 @@ public class ConcurrentHashMapSqlRegistryTest {
         checkFindResult("SQL1", "SQL2", "SQL3");
     }
 
-    private void checkFindResult(String expected1, String expected2, String expected3) {
+    protected void checkFindResult(String expected1, String expected2, String expected3) {
         assertThat(sqlRegistry.findSql("KEY1"), is(expected1));
         assertThat(sqlRegistry.findSql("KEY2"), is(expected2));
         assertThat(sqlRegistry.findSql("KEY3"), is(expected3));
