@@ -4,13 +4,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import springbook.TestApplicationContext;
+import springbook.AppContext;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
@@ -23,7 +25,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes = AppContext.class)
 public class UserDaoTest {
     @Autowired
     private UserDao dao;
@@ -34,6 +37,9 @@ public class UserDaoTest {
     private User user1;
     private User user2;
     private User user3;
+
+    @Autowired
+    DefaultListableBeanFactory bf;
 
     @Before
     public void setUp() {
@@ -157,5 +163,12 @@ public class UserDaoTest {
         checkSameUser(user1, user1update);
         User user2update = dao.get(user2.getId());
         checkSameUser(user2, user2update);
+    }
+
+    @Test
+    public void beans() {
+        for (String n: bf.getBeanDefinitionNames()) {
+            System.out.println(n + " \t" + bf.getBean(n).getClass().getName());
+        }
     }
 }

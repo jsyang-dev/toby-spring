@@ -16,29 +16,29 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/junit.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = "/junit.xml")
 public class JUnitTest {
-    @Autowired
-    ApplicationContext context;
+//    @Autowired
+//    ApplicationContext context;
+//
+//    @Autowired
+//    UserDaoJdbc dao1;
+//
+//    @Autowired
+//    UserDaoJdbc dao2;
+//
+//    static Set<JUnitTest> testObjects = new HashSet<JUnitTest>();
+//    static ApplicationContext contextObject = null;
 
-    @Autowired
-    UserDaoJdbc dao1;
-
-    @Autowired
-    UserDaoJdbc dao2;
-
-    static Set<JUnitTest> testObjects = new HashSet<JUnitTest>();
-    static ApplicationContext contextObject = null;
-
-    @Test
-    public void test1() {
-        assertThat(testObjects, not(hasItem(this)));
-        testObjects.add(this);
-
-        assertThat(contextObject == null || contextObject == this.context, is(true));
-        contextObject = this.context;
-    }
+//    @Test
+//    public void test1() {
+//        assertThat(testObjects, not(hasItem(this)));
+//        testObjects.add(this);
+//
+//        assertThat(contextObject == null || contextObject == this.context, is(true));
+//        contextObject = this.context;
+//    }
 
 //    @Test
 //    public void test2() {
@@ -58,10 +58,10 @@ public class JUnitTest {
 //        contextObject = this.context;
 //    }
 
-    @Test
-    public void singletonBean() {
-        UserDaoJdbc dao3 = context.getBean("userDao", UserDaoJdbc.class);
-
-        assertThat(dao1 == dao2 && dao2 == dao3, is(true));
-    }
+//    @Test
+//    public void singletonBean() {
+//        UserDaoJdbc dao3 = context.getBean("userDao", UserDaoJdbc.class);
+//
+//        assertThat(dao1 == dao2 && dao2 == dao3, is(true));
+//    }
 }
